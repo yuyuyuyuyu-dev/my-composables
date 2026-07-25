@@ -41,48 +41,6 @@ kotlin {
 }
 ```
 
-## Composables
-
-### `MyMaterialTheme`
-
-A `MaterialTheme` wrapper with a custom color scheme (light / dark) and the bundled Yomogi typography.
-
-```kotlin
-MyMaterialTheme {
-    // your content
-}
-```
-
-On Android, `MyMaterialDynamicTheme` additionally uses the Material You dynamic color scheme
-on Android 12 (API 31) and above, falling back to the custom scheme on older versions.
-
-```kotlin
-MyMaterialDynamicTheme {
-    // your content
-}
-```
-
-### `SimpleTopAppBar`
-
-A simple `TopAppBar` with an optional navigate-back button and a kebab (overflow) menu
-containing "Open source licenses" and an optional "Source code" entry.
-
-```kotlin
-Scaffold(
-    topBar = {
-        SimpleTopAppBar(
-            title = "Home",
-            navigateBackIsPossible = navController.previousBackStackEntry != null,
-            onNavigateBackButtonClick = { navController.navigateUp() },
-            onOpenSourceLicensesButtonClick = { /* navigate to licenses */ },
-            onSourceCodeButtonClick = { /* open source code (optional) */ },
-        )
-    },
-) { innerPadding ->
-    // ...
-}
-```
-
 ## Sample apps
 
 The `androidApp`, `desktopApp`, `webApp`, and `iosApp` modules are sample apps that
@@ -104,9 +62,12 @@ Local verification:
 
 ```bash
 ./gradlew :library:checkSigningConfiguration
-./gradlew :library:checkPomFileForMavenPublication
+./gradlew :library:checkPomFileForKotlinMultiplatformPublication
 ./gradlew :library:publishToMavenLocal
 ```
+
+All publications are signed, so the last two commands need a GPG key to be configured
+locally. Without one, use the per-target compile tasks to check the build instead.
 
 ## License
 
