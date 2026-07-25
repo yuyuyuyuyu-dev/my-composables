@@ -1,0 +1,27 @@
+name: Set up JDK
+description: Sets up the JetBrains Runtime and the Gradle build environment.
+
+inputs:
+  java-version:
+    description: The Java version to set up.
+    required: false
+    default: '21'
+  token:
+    description: >-
+      The token used when downloading the JDK from github.com. JetBrains Runtime
+      is released on GitHub, so without a token the download is rate limited.
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up JetBrains Runtime
+      uses: actions/setup-java@v5
+      with:
+        distribution: jetbrains
+        java-version: ${{ inputs.java-version }}
+        token: ${{ inputs.token }}
+
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v5

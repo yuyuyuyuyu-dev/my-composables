@@ -1,46 +1,90 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
+# MyComposables
 
-* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+My personal collection of reusable Composables for Android and Compose Multiplatform,
+published as a single artifact `dev.yuyuyuyuyu:mycomposables`.
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+Targets: Android, iOS, Desktop (JVM), Web (Wasm / JS).
 
-### Running the apps
+## Installation
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+`gradle/libs.versions.toml`
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- Desktop app:
-  - Hot reload: `./gradlew :desktopApp:hotRun --auto`
-  - Standard run: `./gradlew :desktopApp:run`
-- Web app:
-  - Wasm target (faster, modern browsers): `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
-  - JS target (slower, supports older browsers): `./gradlew :webApp:jsBrowserDevelopmentRun`
-- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+```toml
+[versions]
+myComposables = "x.x.x" # Please replace with the latest version.
 
-### Running tests
+[libraries]
+myComposables = { module = "dev.yuyuyuyuyu:mycomposables", version.ref = "myComposables" }
+```
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+### Android
 
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- Desktop tests: `./gradlew :shared:jvmTest`
-- Web tests:
-  - Wasm target: `./gradlew :shared:wasmJsTest`
-  - JS target: `./gradlew :shared:jsTest`
-- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
+`app/build.gradle.kts`
 
----
+```kotlin
+dependencies {
+    implementation(libs.myComposables)
+}
+```
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+### Compose Multiplatform
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+`composeApp/build.gradle.kts`
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.myComposables)
+        }
+    }
+}
+```
+
+## Sample apps
+
+The `androidApp`, `desktopApp`, `webApp`, and `iosApp` modules are sample apps that
+demonstrate the library (via the `shared` module). They are not published.
+
+- Android: `./gradlew :androidApp:assembleDebug`
+- Desktop: `./gradlew :desktopApp:run`
+- Web (Wasm): `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
+- iOS: open [/iosApp](./iosApp) in Xcode and run.
+
+## Publishing
+
+Publishing to Maven Central is handled by the
+[vanniktech/gradle-maven-publish-plugin](https://github.com/vanniktech/gradle-maven-publish-plugin)
+on the `:library` module, and runs automatically from
+[`.github/workflows/publish.yml`](./.github/workflows/publish.yml) when a GitHub Release is published.
+
+Local verification:
+
+```bash
+./gradlew :library:checkSigningConfiguration
+./gradlew :library:checkPomFileForKotlinMultiplatformPublication
+./gradlew :library:publishToMavenLocal
+```
+
+All publications are signed, so the last two commands need a GPG key to be configured
+locally. Without one, use the per-target compile tasks to check the build instead.
+
+## License
+
+Apache License 2.0
+
+```
+Copyright 2026 yu
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
