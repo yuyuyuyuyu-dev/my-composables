@@ -84,7 +84,7 @@ mavenPublishing {
             developer {
                 id = "yuyuyuyuyu"
                 name = "yu"
-                email = "a@yuyuyuyuyu.dev"
+                email = "yu@yuyuyuyuyu.dev"
                 url = "https://yuyuyuyuyu.dev"
                 organization = "yu"
                 organizationUrl = "https://yuyuyuyuyu.dev"
