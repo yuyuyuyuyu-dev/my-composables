@@ -8,4 +8,46 @@ plugins {
     alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.vanniktech.mavenPublish) apply false
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.versionCatalogUpdate)
+}
+
+// Resolved here because the version catalog accessor is not available inside
+// the `allprojects` block.
+val composeRulesKtlint = libs.composeRules.ktlint
+
+allprojects {
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+    detekt {
+        parallel = true
+        buildUponDefaultConfig = true
+        config.setFrom(rootProject.file("config/detekt/detekt.yml"))
+        // The default source dirs follow the JVM layout, so every multiplatform
+        // source set (commonMain, androidMain, iosMain, ...) would be skipped.
+        source.setFrom(files("src"))
+    }
+
+    ktlint {
+        filter {
+            // Compose Resources generates sources under `build`, and they are
+            // picked up as part of the Kotlin source sets.
+            exclude { it.file.path.contains("${File.separator}build${File.separator}") }
+        }
+    }
+
+    dependencies {
+        add("ktlintRuleset", composeRulesKtlint)
+    }
+}
+
+versionCatalogUpdate {
+    sortByKey = true
+    keep {
+        // The android-* entries are read directly through `libs.versions.*`
+        // rather than by a library, so they look unused and get pruned.
+        keepUnusedVersions = true
+    }
 }

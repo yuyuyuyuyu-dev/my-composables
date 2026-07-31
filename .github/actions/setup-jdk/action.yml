@@ -23,5 +23,6 @@ runs:
         java-version: ${{ inputs.java-version }}
         token: ${{ inputs.token }}
 
+    # This also validates the checksum of the wrapper jar, which is on by default.
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v5

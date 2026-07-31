@@ -1,0 +1,59 @@
+name: Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Static analysis
+    # No Apple targets are compiled here, so the cheaper runner is enough.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - name: Set up JDK
+        uses: ./.github/actions/setup-jdk
+
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+
+      - name: Run detekt
+        run: ./gradlew detekt
+
+      - name: Check the version catalog is formatted
+        run: |
+          ./gradlew versionCatalogFormat
+          git diff --exit-code gradle/libs.versions.toml
+
+  test:
+    name: Build and test
+    # macOS is required to build and test the Apple targets.
+    runs-on: macos-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - name: Set up JDK
+        uses: ./.github/actions/setup-jdk
+
+      - name: Run tests
+        run: ./gradlew allTests
+
+      - name: Assemble
+        run: ./gradlew assemble
+
+      - name: Upload test results
+        # Kept on failure so the reports explain what broke.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/build/reports/tests/'
+          retention-days: 7

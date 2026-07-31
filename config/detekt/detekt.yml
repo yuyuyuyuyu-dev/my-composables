@@ -1,0 +1,25 @@
+# Only the deviations from the default config are listed here, because
+# `buildUponDefaultConfig` is enabled.
+
+style:
+  # Compose previews and sample code read better with the values inline.
+  MagicNumber:
+    active: false
+  # Previews are rendered by the IDE, so nothing in the code calls them.
+  UnusedPrivateMember:
+    ignoreAnnotated: [ 'Preview' ]
+
+naming:
+  # Composables are named in PascalCase, which the default pattern rejects.
+  FunctionNaming:
+    ignoreAnnotated: [ 'Composable' ]
+  # Multiplatform actual declarations live in files named after the expect
+  # declaration and the target, such as `Platform.ios.kt` holding `IOSPlatform`.
+  MatchingDeclarationName:
+    active: false
+
+complexity:
+  # Composables take many parameters by design, since every piece of state and
+  # every callback is passed in explicitly.
+  LongParameterList:
+    ignoreAnnotated: [ 'Composable' ]

@@ -13,10 +13,10 @@ import androidx.compose.ui.tooling.preview.Preview
 
 // Sample app that showcases the composables published by the :library module.
 @Composable
-@Preview
-fun App() {
+fun App(modifier: Modifier = Modifier) {
     MyMaterialTheme {
         Scaffold(
+            modifier = modifier,
             topBar = {
                 SimpleTopAppBar(
                     title = "MyComposables",
@@ -28,9 +28,10 @@ fun App() {
             },
         ) { innerPadding ->
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
@@ -38,4 +39,10 @@ fun App() {
             }
         }
     }
+}
+
+@Composable
+@Preview
+private fun AppPreview() {
+    App()
 }
