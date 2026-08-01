@@ -22,7 +22,8 @@ allprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     detekt {
-        parallel = true
+        // Without a config file detekt reports nothing at all, and without
+        // this flag the file replaces the defaults instead of adding to them.
         buildUponDefaultConfig = true
         config.setFrom(rootProject.file("config/detekt/detekt.yml"))
         // The default source dirs follow the JVM layout, so every multiplatform
@@ -44,7 +45,6 @@ allprojects {
 }
 
 versionCatalogUpdate {
-    sortByKey = true
     keep {
         // The android-* entries are read directly through `libs.versions.*`
         // rather than by a library, so they look unused and get pruned.
