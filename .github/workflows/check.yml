@@ -21,6 +21,9 @@ jobs:
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
 
+      - name: Run actionlint
+        uses: raven-actions/actionlint@v2
+
       - name: Run ktlint
         run: ./gradlew ktlintCheck
 
