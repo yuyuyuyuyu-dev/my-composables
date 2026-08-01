@@ -46,6 +46,11 @@ jobs:
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
 
+      # Runs here rather than in the lint job because the dump covers the Apple
+      # targets, which only this runner can compile.
+      - name: Check the public ABI is unchanged
+        run: ./gradlew :library:checkKotlinAbi
+
       - name: Run tests
         run: ./gradlew allTests
 
