@@ -1,14 +1,11 @@
 name: Check
-
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   actionlint:
     name: actionlint
@@ -16,10 +13,20 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v5
-
       - name: Run actionlint
         uses: raven-actions/actionlint@v2
-
+  yamlfmt:
+    name: yamlfmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+      # The image published by the project itself, rather than a third party
+      # action wrapping it.
+      - name: Run yamlfmt
+        uses: docker://ghcr.io/google/yamlfmt:0.21.0
+        with:
+          args: -lint .
   lint:
     # One job per check, so a single push reports every failure rather than
     # stopping at the first one.
@@ -41,13 +48,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v5
-
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
-
       - name: Run ${{ matrix.name }}
         run: ${{ matrix.run }}
-
   test:
     name: Build and test
     # macOS is required to build and test the Apple targets.
@@ -55,25 +59,20 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v5
-
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
-
       # Runs here rather than with the other checks because the dump covers the
       # Apple targets, which only this runner can compile.
       - name: Check the public ABI is unchanged
         run: ./gradlew :library:checkKotlinAbi
-
       # These keep going after an earlier failure for the same reason the checks
       # above run as separate jobs: one push should report everything.
       - name: Run tests
         if: '!cancelled()'
         run: ./gradlew allTests
-
       - name: Assemble
         if: '!cancelled()'
         run: ./gradlew assemble
-
       - name: Upload test results
         # Kept on failure so the reports explain what broke.
         if: failure()
