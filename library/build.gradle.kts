@@ -49,11 +49,13 @@ kotlin {
     android {
         namespace = "dev.yuyuyuyuyu.mycomposables.library"
         compileSdk =
-            libs.versions.android.compileSdk
+            providers
+                .gradleProperty("compileSdk")
                 .get()
                 .toInt()
         minSdk =
-            libs.versions.android.minSdk
+            providers
+                .gradleProperty("minSdk")
                 .get()
                 .toInt()
 

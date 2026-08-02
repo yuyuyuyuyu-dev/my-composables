@@ -6,10 +6,6 @@ complexity:
 naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
-  # Actual declarations live in files named after the expect declaration and the
-  # target, such as Platform.ios.kt holding IOSPlatform.
-  MatchingDeclarationName:
-    active: false
 style:
   # The default already exempts test sources, but it lists source set names that
   # this project does not use, such as androidHostTest and webTest.

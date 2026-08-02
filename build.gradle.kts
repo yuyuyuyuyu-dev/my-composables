@@ -43,11 +43,3 @@ allprojects {
         add("ktlintRuleset", composeRulesKtlint)
     }
 }
-
-versionCatalogUpdate {
-    keep {
-        // The android-* entries are read directly through `libs.versions.*`
-        // rather than by a library, so they look unused and get pruned.
-        keepUnusedVersions = true
-    }
-}

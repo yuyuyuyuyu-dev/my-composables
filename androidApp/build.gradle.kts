@@ -22,18 +22,21 @@ dependencies {
 android {
     namespace = "dev.yuyuyuyuyu.mycomposables"
     compileSdk =
-        libs.versions.android.compileSdk
+        providers
+            .gradleProperty("compileSdk")
             .get()
             .toInt()
 
     defaultConfig {
         applicationId = "dev.yuyuyuyuyu.mycomposables"
         minSdk =
-            libs.versions.android.minSdk
+            providers
+                .gradleProperty("minSdk")
                 .get()
                 .toInt()
         targetSdk =
-            libs.versions.android.targetSdk
+            providers
+                .gradleProperty("targetSdk")
                 .get()
                 .toInt()
         versionCode = 1
