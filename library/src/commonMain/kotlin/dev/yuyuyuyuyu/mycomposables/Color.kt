@@ -1,3 +1,7 @@
+// The literals are the colour values themselves, so naming them would only
+// restate the name each one is already bound to.
+@file:Suppress("MagicNumber")
+
 package dev.yuyuyuyuyu.mycomposables
 
 import androidx.compose.ui.graphics.Color

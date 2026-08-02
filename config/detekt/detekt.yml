@@ -14,9 +14,10 @@ naming:
     active: false
 
 style:
-  # Colour values are written inline in the theme.
+  # The default already exempts test sources, but it lists source set names that
+  # this project does not use, such as androidHostTest and webTest.
   MagicNumber:
-    active: false
+    excludes: [ '**/*Test/**' ]
   # Previews are rendered by the IDE, so nothing in the code calls them.
   UnusedPrivateMember:
     ignoreAnnotated: [ 'Preview' ]

@@ -1,22 +1,14 @@
 version: 2
 
 updates:
-  # Grouped because the pull request limit is 1: without a group that one slot
-  # holds a single dependency, and the rest wait behind it.
   - package-ecosystem: gradle
     directory: /
     schedule:
       interval: daily
     open-pull-requests-limit: 1
-    groups:
-      gradle-dependencies:
-        patterns: [ '*' ]
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
     open-pull-requests-limit: 1
-    groups:
-      github-actions:
-        patterns: [ '*' ]

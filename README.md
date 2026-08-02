@@ -51,22 +51,6 @@ demonstrate the library (via the `shared` module). They are not published.
 - Web (Wasm): `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
 - iOS: open [/iosApp](./iosApp) in Xcode and run.
 
-## Public API
-
-The public ABI of `:library` is recorded in [`library/api`](./library/api) and checked on
-every build, so a change to it fails CI until the dump is updated. This is what catches
-changes that still compile for callers but break them at run time, such as reordering
-parameters or adding a default value to an existing function.
-
-After deliberately changing the API, refresh the dump and commit it with the change:
-
-```bash
-./gradlew :library:updateKotlinAbi
-```
-
-The Android target is not covered, because the dump only includes the JVM target and the
-klib targets. `MyMaterialDynamicTheme` is therefore unchecked.
-
 ## Publishing
 
 Publishing to Maven Central is handled by the
