@@ -5,11 +5,6 @@ inputs:
     description: The Java version to set up.
     required: false
     default: '21'
-  token:
-    description: >-
-      The token used when downloading the JDK from github.com. JetBrains Runtime is released on GitHub, so without a token the download is rate limited.
-    required: false
-    default: ${{ github.token }}
 runs:
   using: composite
   steps:
@@ -18,12 +13,6 @@ runs:
       with:
         distribution: jetbrains
         java-version: ${{ inputs.java-version }}
-        token: ${{ inputs.token }}
-      # Passing the input alone still hit an unauthenticated rate limit when
-      # resolving the JetBrains Runtime release, so the token goes in the
-      # environment as well.
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
     # This also validates the checksum of the wrapper jar, which is on by default.
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v5
