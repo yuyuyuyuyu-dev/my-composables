@@ -64,15 +64,20 @@ jobs:
       # Runs here rather than with the other checks because the dump covers the
       # Apple targets, which only this runner can compile.
       - name: Check the public ABI is unchanged
+        if: '!cancelled()'
         run: ./gradlew :library:checkKotlinAbi
       # These keep going after an earlier failure for the same reason the checks
       # above run as separate jobs: one push should report everything.
       - name: Run tests
         if: '!cancelled()'
         run: ./gradlew allTests
+      # `assemble` spent three quarters of an hour of every four on
+      # linkReleaseFrameworkIosArm64 alone. The sample apps still have to build,
+      # so the same targets are covered, in their debug form.
       - name: Assemble
         if: '!cancelled()'
-        run: ./gradlew assemble
+        run: >-
+          ./gradlew :library:assemble :desktopApp:assemble :androidApp:assembleDebug :webApp:jsBrowserDevelopmentWebpack :webApp:wasmJsBrowserDevelopmentWebpack :shared:linkDebugFrameworkIosArm64 :shared:linkDebugFrameworkIosSimulatorArm64
       - name: Upload test results
         # Kept on failure so the reports explain what broke.
         if: failure()

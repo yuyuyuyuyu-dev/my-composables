@@ -19,6 +19,11 @@ runs:
         distribution: jetbrains
         java-version: ${{ inputs.java-version }}
         token: ${{ inputs.token }}
+      # Passing the input alone still hit an unauthenticated rate limit when
+      # resolving the JetBrains Runtime release, so the token goes in the
+      # environment as well.
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
     # This also validates the checksum of the wrapper jar, which is on by default.
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v5
