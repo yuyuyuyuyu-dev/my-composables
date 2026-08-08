@@ -71,9 +71,12 @@ jobs:
       - name: Run tests
         if: '!cancelled()'
         run: ./gradlew allTests
-      # `assemble` spent three quarters of an hour of every four on
-      # linkReleaseFrameworkIosArm64 alone. The sample apps still have to build,
-      # so the same targets are covered, in their debug form.
+      # `assemble` builds every target twice, once debug and once release, and
+      # the release half is what costs: linkReleaseFrameworkIosArm64 alone ran
+      # for nearly four hours on this runner. Measured locally with the caches
+      # off, the release variants take about ten times as long as the debug
+      # ones. Every target is still built, so a target that stops compiling is
+      # still caught here rather than at release time.
       - name: Assemble
         if: '!cancelled()'
         run: >-
