@@ -13,6 +13,12 @@ runs:
       with:
         distribution: jetbrains
         java-version: ${{ inputs.java-version }}
+      # The JetBrains installer looks up the release through the GitHub API, and
+      # in v5 it reads the token from the environment only, never from the
+      # token input. Without this the request is unauthenticated and runs into
+      # the rate limit for the runner's address.
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
     # This also validates the checksum of the wrapper jar, which is on by default.
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v5
