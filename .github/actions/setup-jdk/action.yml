@@ -8,10 +8,6 @@ inputs:
 runs:
   using: composite
   steps:
-    # Azul to match toolchainVendor in gradle/gradle-daemon-jvm.properties.
-    # On any other vendor Gradle downloads an Azul JDK of its own to run the
-    # daemon on, leaving the one installed here to do nothing but launch the
-    # wrapper.
     - name: Set up Zulu
       uses: actions/setup-java@v5
       with:
