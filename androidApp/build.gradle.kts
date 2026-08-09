@@ -12,8 +12,11 @@ kotlin {
 }
 dependencies {
     implementation(project(":shared"))
+    // For MyMaterialDynamicTheme, which :shared cannot reach from commonMain.
+    implementation(project(":library"))
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.compose.material3)
 
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
