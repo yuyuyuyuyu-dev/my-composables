@@ -13,11 +13,12 @@ import org.jetbrains.compose.resources.Font
 
 @Suppress("unused")
 @Composable
-fun MyMaterialTheme(content: @Composable () -> Unit) = MyMaterialTheme(
-    colorScheme = if (isSystemInDarkTheme()) darkScheme else lightScheme,
-    typography = createTypographyFrom(FontFamily(Font(Res.font.Yomogi_Regular))),
-    content = content,
-)
+fun MyMaterialTheme(content: @Composable () -> Unit) =
+    MyMaterialTheme(
+        colorScheme = if (isSystemInDarkTheme()) darkScheme else lightScheme,
+        typography = createTypographyFrom(FontFamily(Font(Res.font.Yomogi_Regular))),
+        content = content,
+    )
 
 @Composable
 internal fun MyMaterialTheme(

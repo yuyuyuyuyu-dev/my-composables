@@ -1,12 +1,10 @@
 name: Publish
-
 on:
   # `released` does not fire when a release is published from a draft, and the
   # GitHub UI saves releases as drafts by default. `published` covers both
   # stable releases and pre-releases, however they were created.
   release:
-    types: [ published ]
-
+    types: [published]
 jobs:
   publish:
     name: Release build and publish
@@ -14,10 +12,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v5
-
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
-
       - name: Publish to Maven Central
         run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
         env:

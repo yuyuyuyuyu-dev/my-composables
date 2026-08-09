@@ -7,7 +7,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,8 +30,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SimpleTopAppBar(
     title: String,
-    modifier: Modifier = Modifier,
     navigateBackIsPossible: Boolean,
+    onNavigateBackButtonClick: () -> Unit,
+    onOpenSourceLicensesButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
     openSourceLicensesButtonLabel: @Composable () -> Unit = { Text(stringResource(Res.string.open_source_licenses)) },
     sourceCodeButtonLabel: @Composable () -> Unit = {
         Row {
@@ -34,8 +42,6 @@ fun SimpleTopAppBar(
             Text(stringResource(Res.string.source_code))
         }
     },
-    onNavigateBackButtonClick: () -> Unit,
-    onOpenSourceLicensesButtonClick: () -> Unit,
     onSourceCodeButtonClick: (() -> Unit)? = null,
 ) = TopAppBar(
     title = { Text(title) },

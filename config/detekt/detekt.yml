@@ -1,0 +1,16 @@
+# detekt assumes a plain JVM project, so these are the defaults that do not hold
+# for Compose Multiplatform. Everything else is left at the default.
+complexity:
+  LongParameterList:
+    ignoreAnnotated: ['Composable']
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+style:
+  # The default already exempts test sources, but it lists source set names that
+  # this project does not use, such as androidHostTest and webTest.
+  MagicNumber:
+    excludes: ['**/*Test/**']
+  # Previews are rendered by the IDE, so nothing in the code calls them.
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview']

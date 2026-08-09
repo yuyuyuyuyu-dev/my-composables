@@ -10,15 +10,16 @@ import dev.yuyuyuyuyu.createtypography.createTypographyFrom
 
 @Composable
 fun MyMaterialDynamicTheme(content: @Composable () -> Unit) {
-    val colorScheme = when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (isSystemInDarkTheme()) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val colorScheme =
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                val context = LocalContext.current
+                if (isSystemInDarkTheme()) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            }
 
-        isSystemInDarkTheme() -> darkScheme
-        else -> lightScheme
-    }
+            isSystemInDarkTheme() -> darkScheme
+            else -> lightScheme
+        }
 
     MyMaterialTheme(
         colorScheme = colorScheme,
