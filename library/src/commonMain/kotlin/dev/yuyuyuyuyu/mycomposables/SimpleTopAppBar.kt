@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import dev.yuyuyuyuyu.mycomposables.generated.resources.Res
+import dev.yuyuyuyuyu.mycomposables.generated.resources.more_options
+import dev.yuyuyuyuyu.mycomposables.generated.resources.navigate_back
 import dev.yuyuyuyuyu.mycomposables.generated.resources.open_source_licenses
 import dev.yuyuyuyuyu.mycomposables.generated.resources.source_code
 import org.jetbrains.compose.resources.stringResource
@@ -50,7 +52,7 @@ fun SimpleTopAppBar(
     navigationIcon = {
         if (navigateBackIsPossible) {
             IconButton(
-                content = { Icon(Icons.AutoMirrored.Filled.ArrowBack, "navigate back") },
+                content = { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.navigate_back)) },
                 modifier = Modifier.testTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON),
                 onClick = onNavigateBackButtonClick,
             )
@@ -60,7 +62,7 @@ fun SimpleTopAppBar(
         var menuIsExpanded by rememberSaveable { mutableStateOf(false) }
 
         IconButton(
-            content = { Icon(Icons.Default.MoreVert, "menu") },
+            content = { Icon(Icons.Default.MoreVert, stringResource(Res.string.more_options)) },
             modifier = Modifier.testTag(SimpleTopAppBarTestTags.MENU_BUTTON),
             onClick = { menuIsExpanded = true },
         )
@@ -93,11 +95,11 @@ fun SimpleTopAppBar(
 )
 
 // The navigation and overflow buttons are fixed by this composable, so their
-// descriptions are facts about it rather than a caller's choice, and are not
-// taken as arguments. That leaves a caller's own tests with no handle on the
-// nodes that the library is free to reword, which is what these tags are for.
-// The menu items are tagged as well, since a caller that leaves the labels at
-// their defaults is in the same position.
+// descriptions are facts about it rather than a caller's choice, and are
+// localised here instead of being taken as arguments. That leaves a caller's
+// own tests with no locale independent handle on the nodes, which is what
+// these tags are for. The menu items are tagged as well, since a caller that
+// leaves the labels at their defaults is in the same position.
 //
 // The values are the contract, not the constant names: renaming a constant
 // fails to compile for a caller, but changing a value breaks their tests at run

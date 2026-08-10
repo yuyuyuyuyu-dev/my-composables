@@ -1,4 +1,6 @@
 <resources>
+    <string name="more_options">その他のオプション</string>
+    <string name="navigate_back">戻る</string>
     <string name="open_source_licenses">オープンソース ライセンス</string>
     <string name="source_code">ソースコード</string>
 </resources>
