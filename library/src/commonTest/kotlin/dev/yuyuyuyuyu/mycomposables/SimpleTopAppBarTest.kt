@@ -10,10 +10,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-// Nodes are reached through their published test tags so that no assertion
-// depends on the locale the test runs under. The two label tests are the
-// exception: the label is what they are about, so they pass one of their own
-// and look it up by text.
 @OptIn(ExperimentalTestApi::class)
 class SimpleTopAppBarTest {
     @Test
@@ -176,8 +172,6 @@ class SimpleTopAppBarTest {
             assertTrue(isCalled)
         }
 
-    // The tags are published, so each one is pinned on its own rather than only
-    // through the tests above that happen to use it to reach a node.
     @Test
     fun `should be able to find the navigate back button by its test tag`() =
         runComposeUiTest {
