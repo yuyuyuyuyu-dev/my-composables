@@ -6,3 +6,13 @@ public final class dev/yuyuyuyuyu/mycomposables/SimpleTopAppBarKt {
 	public static final fun SimpleTopAppBar (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class dev/yuyuyuyuyu/mycomposables/SimpleTopAppBarTestTags {
+	public static final field $stable I
+	public static final field INSTANCE Ldev/yuyuyuyuyu/mycomposables/SimpleTopAppBarTestTags;
+	public static final field MENU Ljava/lang/String;
+	public static final field MENU_BUTTON Ljava/lang/String;
+	public static final field NAVIGATE_BACK_BUTTON Ljava/lang/String;
+	public static final field OPEN_SOURCE_LICENSES_BUTTON Ljava/lang/String;
+	public static final field SOURCE_CODE_BUTTON Ljava/lang/String;
+}
+

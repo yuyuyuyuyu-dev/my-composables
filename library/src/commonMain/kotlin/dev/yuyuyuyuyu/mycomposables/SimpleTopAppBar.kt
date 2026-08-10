@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import dev.yuyuyuyuyu.mycomposables.generated.resources.Res
 import dev.yuyuyuyuyu.mycomposables.generated.resources.open_source_licenses
@@ -50,6 +51,7 @@ fun SimpleTopAppBar(
         if (navigateBackIsPossible) {
             IconButton(
                 content = { Icon(Icons.AutoMirrored.Filled.ArrowBack, "navigate back") },
+                modifier = Modifier.testTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON),
                 onClick = onNavigateBackButtonClick,
             )
         }
@@ -59,12 +61,14 @@ fun SimpleTopAppBar(
 
         IconButton(
             content = { Icon(Icons.Default.MoreVert, "menu") },
+            modifier = Modifier.testTag(SimpleTopAppBarTestTags.MENU_BUTTON),
             onClick = { menuIsExpanded = true },
         )
 
         DropdownMenu(
             expanded = menuIsExpanded,
             onDismissRequest = { menuIsExpanded = false },
+            modifier = Modifier.testTag(SimpleTopAppBarTestTags.MENU),
         ) {
             DropdownMenuItem(
                 text = openSourceLicensesButtonLabel,
@@ -72,6 +76,7 @@ fun SimpleTopAppBar(
                     onOpenSourceLicensesButtonClick()
                     menuIsExpanded = false
                 },
+                modifier = Modifier.testTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON),
             )
             if (onSourceCodeButtonClick != null) {
                 DropdownMenuItem(
@@ -80,8 +85,27 @@ fun SimpleTopAppBar(
                         onSourceCodeButtonClick()
                         menuIsExpanded = false
                     },
+                    modifier = Modifier.testTag(SimpleTopAppBarTestTags.SOURCE_CODE_BUTTON),
                 )
             }
         }
     },
 )
+
+// The navigation and overflow buttons are fixed by this composable, so their
+// descriptions are facts about it rather than a caller's choice, and are not
+// taken as arguments. That leaves a caller's own tests with no handle on the
+// nodes that the library is free to reword, which is what these tags are for.
+// The menu items are tagged as well, since a caller that leaves the labels at
+// their defaults is in the same position.
+//
+// The values are the contract, not the constant names: renaming a constant
+// fails to compile for a caller, but changing a value breaks their tests at run
+// time instead.
+object SimpleTopAppBarTestTags {
+    const val NAVIGATE_BACK_BUTTON = "SimpleTopAppBar.NavigateBackButton"
+    const val MENU_BUTTON = "SimpleTopAppBar.MenuButton"
+    const val MENU = "SimpleTopAppBar.Menu"
+    const val OPEN_SOURCE_LICENSES_BUTTON = "SimpleTopAppBar.OpenSourceLicensesButton"
+    const val SOURCE_CODE_BUTTON = "SimpleTopAppBar.SourceCodeButton"
+}
