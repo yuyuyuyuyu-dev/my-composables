@@ -6,5 +6,21 @@
 // - Show declarations: true
 
 // Library unique name: <dev.yuyuyuyuyu:library>
+final object dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags { // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags|null[0]
+    final const val MENU // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.MENU|{}MENU[0]
+        final fun <get-MENU>(): kotlin/String // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.MENU.<get-MENU>|<get-MENU>(){}[0]
+    final const val MENU_BUTTON // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.MENU_BUTTON|{}MENU_BUTTON[0]
+        final fun <get-MENU_BUTTON>(): kotlin/String // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.MENU_BUTTON.<get-MENU_BUTTON>|<get-MENU_BUTTON>(){}[0]
+    final const val NAVIGATE_BACK_BUTTON // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON|{}NAVIGATE_BACK_BUTTON[0]
+        final fun <get-NAVIGATE_BACK_BUTTON>(): kotlin/String // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON.<get-NAVIGATE_BACK_BUTTON>|<get-NAVIGATE_BACK_BUTTON>(){}[0]
+    final const val OPEN_SOURCE_LICENSES_BUTTON // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON|{}OPEN_SOURCE_LICENSES_BUTTON[0]
+        final fun <get-OPEN_SOURCE_LICENSES_BUTTON>(): kotlin/String // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON.<get-OPEN_SOURCE_LICENSES_BUTTON>|<get-OPEN_SOURCE_LICENSES_BUTTON>(){}[0]
+    final const val SOURCE_CODE_BUTTON // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.SOURCE_CODE_BUTTON|{}SOURCE_CODE_BUTTON[0]
+        final fun <get-SOURCE_CODE_BUTTON>(): kotlin/String // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBarTestTags.SOURCE_CODE_BUTTON.<get-SOURCE_CODE_BUTTON>|<get-SOURCE_CODE_BUTTON>(){}[0]
+}
+
+final val dev.yuyuyuyuyu.mycomposables/dev_yuyuyuyuyu_mycomposables_SimpleTopAppBarTestTags$stableprop // dev.yuyuyuyuyu.mycomposables/dev_yuyuyuyuyu_mycomposables_SimpleTopAppBarTestTags$stableprop|#static{}dev_yuyuyuyuyu_mycomposables_SimpleTopAppBarTestTags$stableprop[0]
+
 final fun dev.yuyuyuyuyu.mycomposables/MyMaterialTheme(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // dev.yuyuyuyuyu.mycomposables/MyMaterialTheme|MyMaterialTheme(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
 final fun dev.yuyuyuyuyu.mycomposables/SimpleTopAppBar(kotlin/String, kotlin/Boolean, kotlin/Function0<kotlin/Unit>, kotlin/Function0<kotlin/Unit>, androidx.compose.ui/Modifier?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>?, kotlin/Function0<kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // dev.yuyuyuyuyu.mycomposables/SimpleTopAppBar|SimpleTopAppBar(kotlin.String;kotlin.Boolean;kotlin.Function0<kotlin.Unit>;kotlin.Function0<kotlin.Unit>;androidx.compose.ui.Modifier?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>?;kotlin.Function0<kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun dev.yuyuyuyuyu.mycomposables/dev_yuyuyuyuyu_mycomposables_SimpleTopAppBarTestTags$stableprop_getter(): kotlin/Int // dev.yuyuyuyuyu.mycomposables/dev_yuyuyuyuyu_mycomposables_SimpleTopAppBarTestTags$stableprop_getter|dev_yuyuyuyuyu_mycomposables_SimpleTopAppBarTestTags$stableprop_getter(){}[0]

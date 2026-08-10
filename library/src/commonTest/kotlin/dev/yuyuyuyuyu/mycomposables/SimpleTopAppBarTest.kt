@@ -3,15 +3,13 @@ package dev.yuyuyuyuyu.mycomposables
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-// A menu item is located by its label, so the tests that reach one pass a label
-// of their own rather than depend on the locale the test runs under.
 @OptIn(ExperimentalTestApi::class)
 class SimpleTopAppBarTest {
     @Test
@@ -45,7 +43,7 @@ class SimpleTopAppBarTest {
             }
 
             // Assert
-            onNodeWithContentDescription("navigate back").assertIsDisplayed()
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).assertIsDisplayed()
         }
 
     @Test
@@ -62,7 +60,7 @@ class SimpleTopAppBarTest {
             }
 
             // Assert
-            onNodeWithContentDescription("navigate back").assertDoesNotExist()
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).assertDoesNotExist()
         }
 
     @Test
@@ -80,7 +78,7 @@ class SimpleTopAppBarTest {
             }
 
             // Act
-            onNodeWithContentDescription("navigate back").performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick()
 
             // Assert
             assertTrue(isCalled)
@@ -97,13 +95,12 @@ class SimpleTopAppBarTest {
                     navigateBackIsPossible = false,
                     onNavigateBackButtonClick = {},
                     onOpenSourceLicensesButtonClick = { isCalled = true },
-                    openSourceLicensesButtonLabel = { Text("licenses") },
                 )
             }
 
             // Act
-            onNodeWithContentDescription("menu").performClick()
-            onNodeWithText("licenses").performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
 
             // Assert
             assertTrue(isCalled)
@@ -124,7 +121,7 @@ class SimpleTopAppBarTest {
             }
 
             // Act
-            onNodeWithContentDescription("menu").performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
 
             // Assert
             onNodeWithText("licenses").assertIsDisplayed()
@@ -146,7 +143,7 @@ class SimpleTopAppBarTest {
             }
 
             // Act
-            onNodeWithContentDescription("menu").performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
 
             // Assert
             onNodeWithText("source code").assertIsDisplayed()
@@ -163,16 +160,110 @@ class SimpleTopAppBarTest {
                     navigateBackIsPossible = false,
                     onNavigateBackButtonClick = {},
                     onOpenSourceLicensesButtonClick = {},
-                    sourceCodeButtonLabel = { Text("source code") },
                     onSourceCodeButtonClick = { isCalled = true },
                 )
             }
 
             // Act
-            onNodeWithContentDescription("menu").performClick()
-            onNodeWithText("source code").performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.SOURCE_CODE_BUTTON).performClick()
 
             // Assert
             assertTrue(isCalled)
+        }
+
+    @Test
+    fun `should be able to find the navigate back button by its test tag`() =
+        runComposeUiTest {
+            // Arrange
+            setContent {
+                SimpleTopAppBar(
+                    title = "title",
+                    navigateBackIsPossible = true,
+                    onNavigateBackButtonClick = {},
+                    onOpenSourceLicensesButtonClick = {},
+                )
+            }
+
+            // Assert
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).assertExists()
+        }
+
+    @Test
+    fun `should be able to find the menu button by its test tag`() =
+        runComposeUiTest {
+            // Arrange
+            setContent {
+                SimpleTopAppBar(
+                    title = "title",
+                    navigateBackIsPossible = false,
+                    onNavigateBackButtonClick = {},
+                    onOpenSourceLicensesButtonClick = {},
+                )
+            }
+
+            // Assert
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).assertExists()
+        }
+
+    @Test
+    fun `should be able to find the menu by its test tag`() =
+        runComposeUiTest {
+            // Arrange
+            setContent {
+                SimpleTopAppBar(
+                    title = "title",
+                    navigateBackIsPossible = false,
+                    onNavigateBackButtonClick = {},
+                    onOpenSourceLicensesButtonClick = {},
+                )
+            }
+
+            // Act
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+
+            // Assert
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU).assertExists()
+        }
+
+    @Test
+    fun `should be able to find the open source licenses button by its test tag`() =
+        runComposeUiTest {
+            // Arrange
+            setContent {
+                SimpleTopAppBar(
+                    title = "title",
+                    navigateBackIsPossible = false,
+                    onNavigateBackButtonClick = {},
+                    onOpenSourceLicensesButtonClick = {},
+                )
+            }
+
+            // Act
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+
+            // Assert
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).assertExists()
+        }
+
+    @Test
+    fun `should be able to find the source code button by its test tag`() =
+        runComposeUiTest {
+            // Arrange
+            setContent {
+                SimpleTopAppBar(
+                    title = "title",
+                    navigateBackIsPossible = false,
+                    onNavigateBackButtonClick = {},
+                    onOpenSourceLicensesButtonClick = {},
+                    onSourceCodeButtonClick = {},
+                )
+            }
+
+            // Act
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+
+            // Assert
+            onNodeWithTag(SimpleTopAppBarTestTags.SOURCE_CODE_BUTTON).assertExists()
         }
 }
