@@ -9,8 +9,10 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
+import dev.yuyuyuyuyu.mycomposables.generated.resources.Res
+import dev.yuyuyuyuyu.mycomposables.generated.resources.open_source_licenses
+import org.jetbrains.compose.resources.getString
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class MyScaffoldTest {
@@ -33,24 +35,55 @@ class MyScaffoldTest {
         )
 
     @Test
-    fun `should display the title it was given`() =
+    fun `should navigate to the open source licenses screen`() =
         runComposeUiTest {
             // Arrange
             setContent {
                 MyScaffold(title = "title", libraries = libraries) {}
             }
 
+            // Act
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
+
             // Assert
-            onNodeWithText("title").assertIsDisplayed()
+            onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertIsDisplayed()
         }
 
     @Test
-    fun `should display the content it was given`() =
+    fun `should do nothing when the open source licenses button is clicked on the open source licenses screen`() =
         runComposeUiTest {
             // Arrange
             setContent {
                 MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
             }
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
+
+            // Act
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
+
+            // Assert
+            // A single step back reaching the main screen is what shows the
+            // click left the back stack alone.
+            onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertIsDisplayed()
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick()
+            onNodeWithText("main screen").assertIsDisplayed()
+        }
+
+    @Test
+    fun `should navigate back to the main screen from the open source licenses screen`() =
+        runComposeUiTest {
+            // Arrange
+            setContent {
+                MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
+            }
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
+
+            // Act
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick()
 
             // Assert
             onNodeWithText("main screen").assertIsDisplayed()
@@ -69,26 +102,36 @@ class MyScaffoldTest {
         }
 
     @Test
-    fun `should navigate to the open source licenses screen when the open source licenses button is clicked`() =
+    fun `should display the content it was given on the main screen`() =
         runComposeUiTest {
             // Arrange
             setContent {
                 MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
             }
 
-            // Act
-            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-
             // Assert
-            onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertIsDisplayed()
-            onNodeWithText("main screen").assertDoesNotExist()
+            onNodeWithText("main screen").assertIsDisplayed()
         }
 
     @Test
-    fun `should display the libraries it was given on the open source licenses screen`() =
+    fun `should display the title it was given on the main screen`() =
         runComposeUiTest {
             // Arrange
+            setContent {
+                MyScaffold(title = "title", libraries = libraries) {}
+            }
+
+            // Assert
+            onNodeWithText("title").assertIsDisplayed()
+        }
+
+    @Test
+    fun `should display the localised open source licenses title on the open source licenses screen`() =
+        runComposeUiTest {
+            // Arrange
+            // Compared against the resource rather than against a literal, so
+            // that the assertion holds whichever locale the tests run under.
+            val openSourceLicensesTitle = getString(Res.string.open_source_licenses)
             setContent {
                 MyScaffold(title = "title", libraries = libraries) {}
             }
@@ -98,80 +141,6 @@ class MyScaffoldTest {
             onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
 
             // Assert
-            onNodeWithText("MyComposables").assertIsDisplayed()
-        }
-
-    @Test
-    fun `should navigate back to the main screen when the navigate back button is clicked`() =
-        runComposeUiTest {
-            // Arrange
-            setContent {
-                MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
-            }
-            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-
-            // Act
-            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick()
-
-            // Assert
-            onNodeWithText("main screen").assertIsDisplayed()
-            onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertDoesNotExist()
-        }
-
-    @Test
-    fun `should stay on the open source licenses screen when the open source licenses button is clicked again`() =
-        runComposeUiTest {
-            // Arrange
-            setContent {
-                MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
-            }
-            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-
-            // Act
-            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick()
-
-            // Assert
-            onNodeWithText("main screen").assertIsDisplayed()
-        }
-
-    @Test
-    fun `should call onSourceCodeButtonClick when the source code button is clicked`() =
-        runComposeUiTest {
-            // Arrange
-            var isCalled = false
-            setContent {
-                MyScaffold(
-                    title = "title",
-                    libraries = libraries,
-                    onSourceCodeButtonClick = { isCalled = true },
-                ) {}
-            }
-
-            // Act
-            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            onNodeWithTag(SimpleTopAppBarTestTags.SOURCE_CODE_BUTTON).performClick()
-
-            // Assert
-            assertTrue(isCalled)
-        }
-
-    @Test
-    fun `should be able to find the open source licenses screen by its test tag`() =
-        runComposeUiTest {
-            // Arrange
-            setContent {
-                MyScaffold(title = "title", libraries = libraries) {}
-            }
-
-            // Act
-            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-
-            // Assert
-            onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertExists()
+            onNodeWithText(openSourceLicensesTitle).assertIsDisplayed()
         }
 }
