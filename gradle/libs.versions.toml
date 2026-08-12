@@ -1,4 +1,7 @@
 [versions]
+# 15.x requires compileSdk 37 and Android Gradle plugin 9.1, so it is held back
+# until this project moves to both.
+aboutLibraries = "14.2.1"
 agp = "9.0.1"
 androidx-activity = "1.13.0"
 androidx-appcompat = "1.7.1"
@@ -17,9 +20,13 @@ kotlinx-coroutines = "1.11.0"
 ktlint = "14.2.0"
 material3 = "1.11.0-alpha07"
 mavenPublish = "0.36.0"
+navigation3 = "1.1.1"
 versionCatalogUpdate = "1.1.0"
 
 [libraries]
+aboutLibraries-composeCore = { module = "com.mikepenz:aboutlibraries-compose-core", version.ref = "aboutLibraries" }
+aboutLibraries-composeM3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+aboutLibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
@@ -41,9 +48,12 @@ junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
+navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 wrappers-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser", version.ref = "kotlin-wrappers" }
 
 [plugins]
+aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -51,6 +61,7 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
 versionCatalogUpdate = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
