@@ -2,6 +2,10 @@ public final class dev/yuyuyuyuyu/mycomposables/MyMaterialThemeKt {
 	public static final fun MyMaterialTheme (Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
+public final class dev/yuyuyuyuyu/mycomposables/MyScaffoldKt {
+	public static final fun MyScaffold (Ljava/lang/String;Lcom/mikepenz/aboutlibraries/Libs;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class dev/yuyuyuyuyu/mycomposables/SimpleTopAppBarKt {
 	public static final fun SimpleTopAppBar (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }

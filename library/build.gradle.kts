@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.vanniktech.mavenPublish)
 }
 
@@ -69,13 +70,20 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // MyScaffold takes AboutLibraries' `Libs` as a parameter, so the type
+            // has to reach callers rather than stay on the runtime classpath.
+            api(libs.aboutLibraries.core)
+
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(compose.materialIconsExtended)
+            implementation(libs.aboutLibraries.composeM3)
             implementation(libs.createTypography)
+            implementation(libs.navigation3.runtime)
+            implementation(libs.navigation3.ui)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

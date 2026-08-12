@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mikepenz.aboutlibraries.ui.compose.produceLibraries
+import mycomposables.shared.generated.resources.Res
 
 // The theme is a parameter so that androidApp can also run the sample under
 // MyMaterialDynamicTheme, which the library publishes for Android only.
@@ -35,25 +36,25 @@ fun App(
     var sourceCodeEntryIsShown by rememberSaveable { mutableStateOf(true) }
     var lastClickedButton by rememberSaveable { mutableStateOf("none") }
 
+    // The list is generated for this module by the AboutLibraries Gradle plugin,
+    // so it describes the sample's own dependencies.
+    val libraries by produceLibraries {
+        Res.readBytes("files/aboutlibraries.json").decodeToString()
+    }
+
     theme {
-        Scaffold(
+        // Both labels are left at their defaults here. The bar in the content
+        // passes its own.
+        MyScaffold(
+            title = "MyComposables",
+            libraries = libraries,
             modifier = modifier,
-            topBar = {
-                // Both labels are left at their defaults here. The bar in the
-                // content passes its own.
-                SimpleTopAppBar(
-                    title = "MyComposables",
-                    navigateBackIsPossible = navigateBackIsPossible,
-                    onNavigateBackButtonClick = { lastClickedButton = "navigate back" },
-                    onOpenSourceLicensesButtonClick = { lastClickedButton = "open source licenses" },
-                    onSourceCodeButtonClick =
-                        if (sourceCodeEntryIsShown) {
-                            { lastClickedButton = "source code" }
-                        } else {
-                            null
-                        },
-                )
-            },
+            onSourceCodeButtonClick =
+                if (sourceCodeEntryIsShown) {
+                    { lastClickedButton = "source code" }
+                } else {
+                    null
+                },
         ) { innerPadding ->
             SampleContent(
                 lastClickedButton = lastClickedButton,
