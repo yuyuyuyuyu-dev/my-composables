@@ -130,9 +130,13 @@ private val routeSavedStateConfiguration =
             }
     }
 
-// The licenses screen is furnished by this composable rather than by a caller,
-// so a caller's own tests have no handle on it. See SimpleTopAppBarTestTags for
-// why the values rather than the constant names are the contract.
-object MyScaffoldTestTags {
+// Internal, unlike SimpleTopAppBarTestTags. Those are published because a
+// caller otherwise cannot reach the bar's icon buttons and default menu items
+// from their own tests at all, so without them there is no way to drive the
+// UI. This one only asserts that a screen MyScaffold owns is showing, which is
+// this library's behaviour to cover rather than a caller's, and a caller
+// checking that they wired their own list up would assert on one of their
+// dependency names instead.
+internal object MyScaffoldTestTags {
     const val OPEN_SOURCE_LICENSES_SCREEN = "MyScaffold.OpenSourceLicensesScreen"
 }
