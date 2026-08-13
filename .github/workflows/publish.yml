@@ -1,7 +1,10 @@
 name: Publish
 on:
   release:
-    types: [released, prereleased]
+    # `prereleased` does not fire for a pre-release published from a draft, and
+    # the GitHub UI saves a release as a draft on its own. `published` covers
+    # releases and pre-releases alike, however they were created.
+    types: [published]
 # The signing key and the Maven Central token are readable by every step, so the
 # token this workflow carries is narrowed to what the checkout needs.
 permissions:
@@ -16,27 +19,20 @@ jobs:
         uses: actions/checkout@v5
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
-      # A version already on Maven Central can never be replaced, so a tag that
-      # disagrees with the version being built has to fail before the upload
-      # rather than leave the wrong number published for good.
-      - name: Check the release tag matches the library version
-        env:
-          TAG: ${{ github.event.release.tag_name }}
-        run: |
-          version="$(./gradlew -q :library:properties --property version --no-configuration-cache | awk '/^version:/ { print $2 }')"
-          if [ "${TAG#v}" != "$version" ]; then
-            echo "Release tag $TAG does not match the library version $version." >&2
-            exit 1
-          fi
       # Releases the deployment outright rather than leaving it for a manual
       # click in the Central Portal, since creating the GitHub release is
       # already the deliberate go-ahead.
       #
+      # The tag carries the version, with an optional `v` stripped off, so the
+      # build cannot disagree with the release it was cut from. Re-running a
+      # version that is already on Maven Central is rejected there.
+      #
       # The publishing plugin does not support the configuration cache, which
       # gradle.properties turns on for every build.
       - name: Publish to Maven Central
-        run: ./gradlew :library:publishAndReleaseToMavenCentral --no-configuration-cache
+        run: ./gradlew :library:publishAndReleaseToMavenCentral -PlibraryVersion="${TAG#v}" --no-configuration-cache
         env:
+          TAG: ${{ github.event.release.tag_name }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
