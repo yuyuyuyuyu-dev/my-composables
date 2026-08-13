@@ -112,7 +112,7 @@ mavenPublishing {
 
     signAllPublications()
 
-    coordinates(group.toString(), "mycomposables", version.toString())
+    coordinates(group.toString(), "my-composables", version.toString())
 
     pom {
         name = "MyComposables"
