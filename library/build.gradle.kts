@@ -12,7 +12,13 @@ plugins {
 }
 
 group = "dev.yuyuyuyuyu"
-version = "0.1.0"
+
+// The release tag is the only source of the published version, so a release
+// cannot go out under a number that disagrees with the tag it was cut from.
+version =
+    providers
+        .gradleProperty("libraryVersion")
+        .get()
 
 kotlin {
     // Dumps the public ABI to api/ so that any change to it has to be committed
@@ -112,7 +118,7 @@ mavenPublishing {
 
     signAllPublications()
 
-    coordinates(group.toString(), "mycomposables", version.toString())
+    coordinates(group.toString(), "my-composables", version.toString())
 
     pom {
         name = "MyComposables"
