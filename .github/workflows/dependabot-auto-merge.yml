@@ -1,0 +1,38 @@
+name: Dependabot auto-merge
+# Dependabot's own `pull_request` runs are handed a read-only token and cannot
+# read the app credentials below. `pull_request_target` runs against the base
+# branch instead, where they are readable. Nothing from the pull request is
+# checked out or executed here, so that context is never handed to code the
+# pull request controls.
+on: pull_request_target
+permissions: {}
+jobs:
+  auto-merge:
+    name: Enable auto-merge
+    # Checking the author keeps the run off pull requests that carry no
+    # Dependabot metadata for the step below to find.
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Read the update metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+      # A merge queued with GITHUB_TOKEN would land on main without starting
+      # any workflow, so the app owns the merge and the push it produces runs
+      # CI on main as a human merge would.
+      - name: Mint a token for the app
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+      # Major updates are left alone, so they keep the individual pull requests
+      # Dependabot opens for them and are merged by hand after a read.
+      - name: Enable auto-merge
+        if: steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
