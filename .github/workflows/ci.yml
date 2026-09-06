@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: Run actionlint
         uses: raven-actions/actionlint@v2
   yamlfmt:
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       # The image published by the project itself, rather than a third party
       # action wrapping it.
       - name: Run yamlfmt
@@ -47,7 +47,7 @@ jobs:
               git diff --exit-code gradle/libs.versions.toml
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
       - name: Run ${{ matrix.name }}
@@ -58,7 +58,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
       # Runs here rather than with the other checks because the dump covers the

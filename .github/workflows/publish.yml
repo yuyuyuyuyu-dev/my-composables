@@ -16,7 +16,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
       # Releases the deployment outright rather than leaving it for a manual
