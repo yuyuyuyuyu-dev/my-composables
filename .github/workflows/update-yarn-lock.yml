@@ -1,0 +1,62 @@
+name: Update yarn.lock
+on:
+  schedule:
+    - cron: '30 0 * * *'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: ${{ github.workflow }}
+jobs:
+  update:
+    name: Update yarn.lock
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      BRANCH: chore/update-yarn-lock
+      TITLE: 'build(deps): update yarn.lock'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up JDK
+        uses: ./.github/actions/setup-jdk
+      - name: Regenerate the lock files
+        run: |
+          rm -f kotlin-js-store/yarn.lock kotlin-js-store/wasm/yarn.lock
+          ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
+      - name: Mint a token for the app
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Open, update or close the pull request
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          pr="$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number')"
+          if [ -z "$(git status --porcelain -- kotlin-js-store)" ]; then
+            if [ -n "$pr" ]; then
+              gh pr close "$pr" --delete-branch --comment 'The lock files on main are already up to date.'
+            fi
+            exit 0
+          fi
+          user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          gh auth setup-git
+          git switch --create "$BRANCH"
+          git add kotlin-js-store
+          git commit --message "$TITLE"
+          if [ -n "$pr" ] && git fetch origin "$BRANCH" && git diff --quiet HEAD FETCH_HEAD; then
+            exit 0
+          fi
+          git push --force origin "$BRANCH"
+          if [ -z "$pr" ]; then
+            gh pr create --base main --head "$BRANCH" --title "$TITLE" --body 'Regenerates the Kotlin/JS yarn.lock files from scratch, so transitive npm dependencies move to the latest versions their ranges allow.'
+          fi
