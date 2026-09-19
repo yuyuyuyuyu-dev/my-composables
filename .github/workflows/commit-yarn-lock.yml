@@ -1,0 +1,77 @@
+name: Commit yarn.lock
+on:
+  workflow_run:
+    workflows: [Regenerate yarn.lock]
+    types: [completed]
+permissions: {}
+jobs:
+  find:
+    name: Find the regenerated lock files
+    if: >-
+      github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.actor.login == 'dependabot[bot]' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    outputs:
+      found: ${{ steps.artifact.outputs.found }}
+    steps:
+      - name: Look for the artifact
+        id: artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          count="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts" --jq '[.artifacts[] | select(.name == "yarn-lock")] | length')"
+          if [ "$count" -gt 0 ]; then
+            echo 'found=true' >> "$GITHUB_OUTPUT"
+          fi
+  commit:
+    name: Commit yarn.lock
+    needs: find
+    if: needs.find.outputs.found == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    steps:
+      - name: Download the lock files
+        uses: actions/download-artifact@v8
+        with:
+          name: yarn-lock
+          path: ${{ runner.temp }}/yarn-lock
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Check out code
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Mint a token for the app
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.AUTO_MERGE_APP_ID }}
+          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          permission-contents: write
+      - name: Push the lock files
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          cp "${RUNNER_TEMP}/yarn-lock/yarn.lock" kotlin-js-store/yarn.lock
+          cp "${RUNNER_TEMP}/yarn-lock/wasm/yarn.lock" kotlin-js-store/wasm/yarn.lock
+          if [ -z "$(git status --porcelain -- kotlin-js-store)" ]; then
+            exit 0
+          fi
+          user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          gh auth setup-git
+          git add kotlin-js-store
+          git commit --message 'build(deps): update yarn.lock'
+          if [ "$(git ls-remote origin "refs/heads/${HEAD_BRANCH}" | cut -f1)" != "$HEAD_SHA" ]; then
+            echo "::notice::${HEAD_BRANCH} has moved on since the lock files were regenerated."
+            exit 0
+          fi
+          git push origin "HEAD:refs/heads/${HEAD_BRANCH}"

@@ -1,0 +1,49 @@
+name: Regenerate yarn.lock
+on: pull_request
+permissions: {}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  regenerate:
+    name: Regenerate yarn.lock
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check for a Kotlin update
+        id: kotlin
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if git diff --unified=0 "${BASE_SHA}...HEAD" -- gradle/libs.versions.toml | grep -q '^+kotlin = '; then
+            echo 'updated=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Set up JDK
+        if: steps.kotlin.outputs.updated == 'true'
+        uses: ./.github/actions/setup-jdk
+      - name: Regenerate the lock files
+        id: lock
+        if: steps.kotlin.outputs.updated == 'true'
+        run: |
+          ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
+          if [ -n "$(git status --porcelain -- kotlin-js-store)" ]; then
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Upload the lock files
+        if: steps.lock.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: yarn-lock
+          path: |
+            kotlin-js-store/yarn.lock
+            kotlin-js-store/wasm/yarn.lock
+          if-no-files-found: error
+          retention-days: 1
