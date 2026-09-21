@@ -26,8 +26,8 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.AUTO_MERGE_APP_ID }}
-          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          app-id: ${{ vars.PR_BOT_APP_ID }}
+          private-key: ${{ secrets.PR_BOT_APP_PRIVATE_KEY }}
       # Major updates are left alone, so they keep the individual pull requests
       # Dependabot opens for them and are merged by hand after a read.
       - name: Enable auto-merge
