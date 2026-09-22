@@ -7,14 +7,13 @@ permissions: {}
 concurrency:
   group: ${{ github.workflow }}
 jobs:
-  update:
-    name: Update yarn.lock
+  regenerate:
+    name: Regenerate the lock files
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      BRANCH: chore/update-yarn-lock
-      TITLE: 'build(deps): update yarn.lock'
+    outputs:
+      changed: ${{ steps.lock.outputs.changed }}
     steps:
       - name: Check out code
         uses: actions/checkout@v7
@@ -23,15 +22,54 @@ jobs:
       - name: Set up JDK
         uses: ./.github/actions/setup-jdk
       - name: Regenerate the lock files
+        id: lock
         run: |
           rm -f kotlin-js-store/yarn.lock kotlin-js-store/wasm/yarn.lock
           ./gradlew kotlinUpgradeYarnLock kotlinWasmUpgradeYarnLock
+          if [ -n "$(git status --porcelain -- kotlin-js-store)" ]; then
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Upload the lock files
+        if: steps.lock.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: yarn-lock
+          path: |
+            kotlin-js-store/yarn.lock
+            kotlin-js-store/wasm/yarn.lock
+          if-no-files-found: error
+          retention-days: 1
+  publish:
+    name: Open, update or close the pull request
+    needs: regenerate
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    env:
+      BRANCH: chore/update-yarn-lock
+      TITLE: 'build(deps): update yarn.lock'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Download the lock files
+        if: needs.regenerate.outputs.changed == 'true'
+        uses: actions/download-artifact@v8
+        with:
+          name: yarn-lock
+          path: ${{ runner.temp }}/yarn-lock
+      - name: Take the regenerated lock files
+        if: needs.regenerate.outputs.changed == 'true'
+        run: |
+          cp "${RUNNER_TEMP}/yarn-lock/yarn.lock" kotlin-js-store/yarn.lock
+          cp "${RUNNER_TEMP}/yarn-lock/wasm/yarn.lock" kotlin-js-store/wasm/yarn.lock
       - name: Mint a token for the app
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.AUTO_MERGE_APP_ID }}
-          private-key: ${{ secrets.AUTO_MERGE_APP_PRIVATE_KEY }}
+          app-id: ${{ vars.PR_BOT_APP_ID }}
+          private-key: ${{ secrets.PR_BOT_APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
       - name: Open, update or close the pull request
