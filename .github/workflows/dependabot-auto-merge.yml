@@ -4,7 +4,9 @@ name: Dependabot auto-merge
 # branch instead, where they are readable. Nothing from the pull request is
 # checked out or executed here, so that context is never handed to code the
 # pull request controls.
-on: pull_request_target
+on:
+  pull_request_target:
+    types: [opened, reopened]
 permissions: {}
 jobs:
   auto-merge:
