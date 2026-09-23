@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-
 plugins {
     // this is necessary to avoid the plugins to be loaded multiple times
     // in each subproject's classloader
@@ -21,14 +19,14 @@ val composeRulesKtlint = libs.composeRules.ktlint
 
 val composeVersion = libs.versions.composeMultiplatform.get()
 val material3Version = libs.versions.material3.get()
-val composeModules =
-    listOf(
-        "org.jetbrains.compose.animation:animation",
-        "org.jetbrains.compose.components:components-resources",
-        "org.jetbrains.compose.foundation:foundation",
-        "org.jetbrains.compose.material:material",
-        "org.jetbrains.compose.runtime:runtime",
-        "org.jetbrains.compose.ui:ui",
+val composeGroups =
+    setOf(
+        "org.jetbrains.compose.animation",
+        "org.jetbrains.compose.components",
+        "org.jetbrains.compose.foundation",
+        "org.jetbrains.compose.material",
+        "org.jetbrains.compose.runtime",
+        "org.jetbrains.compose.ui",
     )
 
 check(composeVersion.split(".").take(2) == material3Version.split(".").take(2)) {
@@ -61,23 +59,13 @@ allprojects {
         add("ktlintRuleset", composeRulesKtlint)
     }
 
-    val composeGuard = configurations.dependencyScope("composeGuard")
+    val guardedGroups = composeGroups
+    val newerThanCompose = "($composeVersion,)"
 
-    dependencies {
-        composeModules.forEach { module ->
-            constraints.add(composeGuard.name, module) {
-                version { reject("($composeVersion,)") }
-                because("Compose Multiplatform $composeVersion bundles the Skiko runtime of its own version only.")
-            }
-        }
-    }
-
-    plugins.withId("org.jetbrains.kotlin.multiplatform") {
-        extensions.getByType<KotlinMultiplatformExtension>().targets.configureEach {
-            compilations.configureEach {
-                listOfNotNull(compileDependencyConfigurationName, runtimeDependencyConfigurationName).forEach { name ->
-                    configurations.named(name) { extendsFrom(composeGuard.get()) }
-                }
+    dependencies.components.all {
+        allVariants {
+            withDependencies {
+                filter { it.group in guardedGroups }.forEach { it.version { reject(newerThanCompose) } }
             }
         }
     }
