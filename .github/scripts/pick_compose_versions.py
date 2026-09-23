@@ -10,7 +10,7 @@ STAGES = ["alpha", "beta", "rc", None]
 
 
 def fetch(path):
-    with urllib.request.urlopen(f"{MAVEN}/{path}") as response:
+    with urllib.request.urlopen(f"{MAVEN}/{path}", timeout=60) as response:
         return response.read().decode()
 
 
@@ -48,9 +48,9 @@ def compose_requirements(material3):
 
 
 def works_with(material3, compose):
-    return all(
-        required is not None and key(required) is not None and key(required) <= key(compose)
-        for required in compose_requirements(material3)
+    required = list(compose_requirements(material3))
+    return bool(required) and all(
+        version is not None and key(version) is not None and key(version) <= key(compose) for version in required
     )
 
 

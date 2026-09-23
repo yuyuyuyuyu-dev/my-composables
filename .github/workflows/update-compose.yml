@@ -57,6 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: read
+      contents: read
     env:
       BRANCH: chore/update-compose
       TITLE: 'build(deps): update Compose Multiplatform to ${{ needs.regenerate.outputs.compose }} and material3 to ${{ needs.regenerate.outputs.material3 }}'
