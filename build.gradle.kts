@@ -61,11 +61,14 @@ allprojects {
 
     val guardedGroups = composeGroups
     val newerThanCompose = "($composeVersion,)"
+    val nextMaterial3Line =
+        composeVersion.split(".").let { (major, minor) -> "[$major.${minor.toInt() + 1},)" }
 
     dependencies.components.all {
         allVariants {
             withDependencies {
                 filter { it.group in guardedGroups }.forEach { it.version { reject(newerThanCompose) } }
+                filter { it.group == "org.jetbrains.compose.material3" }.forEach { it.version { reject(nextMaterial3Line) } }
             }
         }
     }
