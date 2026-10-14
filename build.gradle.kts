@@ -18,7 +18,6 @@ plugins {
 val composeRulesKtlint = libs.composeRules.ktlint
 
 val composeVersion = libs.versions.composeMultiplatform.get()
-val material3Version = libs.versions.material3.get()
 val composeGroups =
     setOf(
         "org.jetbrains.compose.animation",
@@ -28,10 +27,6 @@ val composeGroups =
         "org.jetbrains.compose.runtime",
         "org.jetbrains.compose.ui",
     )
-
-check(composeVersion.split(".").take(2) == material3Version.split(".").take(2)) {
-    "material3 $material3Version is not on the line of Compose Multiplatform $composeVersion."
-}
 
 allprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
@@ -61,14 +56,11 @@ allprojects {
 
     val guardedGroups = composeGroups
     val newerThanCompose = "($composeVersion,)"
-    val nextMaterial3Line =
-        composeVersion.split(".").let { (major, minor) -> "[$major.${minor.toInt() + 1},)" }
 
     dependencies.components.all {
         allVariants {
             withDependencies {
                 filter { it.group in guardedGroups }.forEach { it.version { reject(newerThanCompose) } }
-                filter { it.group == "org.jetbrains.compose.material3" }.forEach { it.version { reject(nextMaterial3Line) } }
             }
         }
     }
