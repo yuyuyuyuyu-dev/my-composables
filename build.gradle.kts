@@ -17,6 +17,17 @@ plugins {
 // the `allprojects` block.
 val composeRulesKtlint = libs.composeRules.ktlint
 
+val composeVersion = libs.versions.composeMultiplatform.get()
+val composeGroups =
+    setOf(
+        "org.jetbrains.compose.animation",
+        "org.jetbrains.compose.components",
+        "org.jetbrains.compose.foundation",
+        "org.jetbrains.compose.material",
+        "org.jetbrains.compose.runtime",
+        "org.jetbrains.compose.ui",
+    )
+
 allprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
@@ -41,5 +52,16 @@ allprojects {
 
     dependencies {
         add("ktlintRuleset", composeRulesKtlint)
+    }
+
+    val guardedGroups = composeGroups
+    val newerThanCompose = "($composeVersion,)"
+
+    dependencies.components.all {
+        allVariants {
+            withDependencies {
+                filter { it.group in guardedGroups }.forEach { it.version { reject(newerThanCompose) } }
+            }
+        }
     }
 }
