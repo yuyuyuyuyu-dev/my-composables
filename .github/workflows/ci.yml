@@ -6,70 +6,52 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+permissions: {}
 jobs:
   actionlint:
     name: actionlint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check out code
         uses: actions/checkout@v7
       - name: Run actionlint
         uses: raven-actions/actionlint@v2
-  yamlfmt:
-    name: yamlfmt
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v7
-      # The image published by the project itself, rather than a third party
-      # action wrapping it.
-      - name: Run yamlfmt
-        uses: docker://ghcr.io/google/yamlfmt:0.21.0
-        with:
-          args: -lint .
-  lint:
-    # One job per check, so a single push reports every failure rather than
-    # stopping at the first one.
-    name: ${{ matrix.name }}
-    # No Apple targets are compiled here, so the cheaper runner is enough.
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: ktlint
-            run: ./gradlew ktlintCheck
-          - name: detekt
-            run: ./gradlew detekt
-          - name: version catalog
-            run: |
-              ./gradlew versionCatalogFormat
-              git diff --exit-code gradle/libs.versions.toml
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: ./.github/actions/setup-jdk
-      - name: Run ${{ matrix.name }}
-        run: ${{ matrix.run }}
+  oxfmt:
+    name: Oxfmt
+    permissions:
+      contents: read
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/oxfmt.yml@main
+  kotlin-lint:
+    name: Kotlin lint
+    permissions:
+      contents: read
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/kotlin-lint.yml@main
+    with:
+      compose-multiplatform: true
   test:
     name: Build and test
     # macOS is required to build and test the Apple targets.
     runs-on: macos-latest
+    permissions:
+      contents: read
     steps:
       - name: Check out code
         uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: ./.github/actions/setup-jdk
+      - name: Set up the JDK and Gradle
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
+        with:
+          compose-multiplatform: true
       # Runs here rather than with the other checks because the dump covers the
       # Apple targets, which only this runner can compile.
       - name: Check the public ABI is unchanged
-        if: '!cancelled()'
+        if: "!cancelled()"
         run: ./gradlew :library:checkKotlinAbi
       # These keep going after an earlier failure for the same reason the checks
       # above run as separate jobs: one push should report everything.
       - name: Run tests
-        if: '!cancelled()'
+        if: "!cancelled()"
         run: ./gradlew allTests
       # `assemble` builds every target twice, once debug and once release, and
       # the release half is what costs: linkReleaseFrameworkIosArm64 alone ran
@@ -78,7 +60,7 @@ jobs:
       # ones. Every target is still built, so a target that stops compiling is
       # still caught here rather than at release time.
       - name: Assemble
-        if: '!cancelled()'
+        if: "!cancelled()"
         run: >-
           ./gradlew :library:assemble :desktopApp:assemble :androidApp:assembleDebug :webApp:jsBrowserDevelopmentWebpack :webApp:wasmJsBrowserDevelopmentWebpack :shared:linkDebugFrameworkIosArm64 :shared:linkDebugFrameworkIosSimulatorArm64
       - name: Upload test results
@@ -87,5 +69,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: test-results
-          path: '**/build/reports/tests/'
+          path: "**/build/reports/tests/"
           retention-days: 7

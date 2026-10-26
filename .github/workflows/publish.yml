@@ -17,8 +17,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: ./.github/actions/setup-jdk
+      - name: Set up the JDK and Gradle
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
+        with:
+          compose-multiplatform: true
       # Releases the deployment outright rather than leaving it for a manual
       # click in the Central Portal, since creating the GitHub release is
       # already the deliberate go-ahead.

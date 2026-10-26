@@ -1,7 +1,7 @@
 name: Update Compose Multiplatform
 on:
   schedule:
-    - cron: '31 7 * * *'
+    - cron: "31 7 * * *"
   workflow_dispatch:
 permissions: {}
 jobs:
@@ -13,7 +13,7 @@ jobs:
       update-js-yarn-lock: true
       update-wasm-yarn-lock: true
       jdk-distribution-to-update-yarn-lock: zulu
-      jdk-version-to-update-yarn-lock: '21'
+      jdk-version-to-update-yarn-lock: "21"
       app-client-id: ${{ vars.PR_BOT_APP_ID }}
       auto-merge: squash
       auto-merge-update-types: minor,patch
