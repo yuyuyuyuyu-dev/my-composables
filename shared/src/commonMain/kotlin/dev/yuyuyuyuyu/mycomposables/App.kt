@@ -59,13 +59,21 @@ fun App(
             SampleContent(
                 lastClickedButton = lastClickedButton,
                 navigateBackIsPossible = navigateBackIsPossible,
-                onNavigateBackIsPossibleChange = { navigateBackIsPossible = it },
-                sourceCodeEntryIsShown = sourceCodeEntryIsShown,
-                onSourceCodeEntryIsShownChange = { sourceCodeEntryIsShown = it },
                 onButtonClick = { lastClickedButton = it },
                 modifier = Modifier.padding(innerPadding),
-                platformToggles = platformToggles,
-            )
+            ) {
+                Toggle(
+                    label = "navigateBackIsPossible",
+                    checked = navigateBackIsPossible,
+                    onCheckedChange = { navigateBackIsPossible = it },
+                )
+                Toggle(
+                    label = "onSourceCodeButtonClick is set",
+                    checked = sourceCodeEntryIsShown,
+                    onCheckedChange = { sourceCodeEntryIsShown = it },
+                )
+                platformToggles()
+            }
         }
     }
 }
@@ -74,12 +82,9 @@ fun App(
 private fun SampleContent(
     lastClickedButton: String,
     navigateBackIsPossible: Boolean,
-    onNavigateBackIsPossibleChange: (Boolean) -> Unit,
-    sourceCodeEntryIsShown: Boolean,
-    onSourceCodeEntryIsShownChange: (Boolean) -> Unit,
     onButtonClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    platformToggles: @Composable () -> Unit,
+    toggles: @Composable () -> Unit,
 ) {
     Column(
         modifier =
@@ -92,17 +97,7 @@ private fun SampleContent(
         Text("Running on ${getPlatform().name}")
         Text("Last clicked: $lastClickedButton", style = MaterialTheme.typography.bodyLarge)
 
-        Toggle(
-            label = "navigateBackIsPossible",
-            checked = navigateBackIsPossible,
-            onCheckedChange = onNavigateBackIsPossibleChange,
-        )
-        Toggle(
-            label = "onSourceCodeButtonClick is set",
-            checked = sourceCodeEntryIsShown,
-            onCheckedChange = onSourceCodeEntryIsShownChange,
-        )
-        platformToggles()
+        toggles()
 
         HorizontalDivider()
 
@@ -138,6 +133,6 @@ private fun Toggle(
 
 @Composable
 @Preview
-private fun AppPreview() {
+fun AppPreview() {
     App()
 }

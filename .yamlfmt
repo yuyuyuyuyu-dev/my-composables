@@ -1,3 +1,0 @@
-# Without this, the JS test run leaves YAML from npm packages under build/ for
-# yamlfmt to find.
-gitignore_excludes: true

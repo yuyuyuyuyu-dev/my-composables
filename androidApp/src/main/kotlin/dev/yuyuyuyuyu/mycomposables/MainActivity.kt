@@ -58,6 +58,6 @@ private fun AndroidApp() {
 
 @Preview
 @Composable
-private fun AppAndroidPreview() {
+fun AppAndroidPreview() {
     AndroidApp()
 }

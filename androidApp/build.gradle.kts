@@ -3,6 +3,25 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeCompiler)
+
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
+}
+
+detekt {
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+ktlint {
+    version = libs.versions.ktlintCli.get()
+    filter {
+        val buildPath =
+            layout.buildDirectory
+                .get()
+                .asFile.path + File.separator
+        exclude { it.file.path.startsWith(buildPath) }
+    }
 }
 
 kotlin {
@@ -26,7 +45,7 @@ android {
     namespace = "dev.yuyuyuyuyu.mycomposables"
     compileSdk =
         providers
-            .gradleProperty("compileSdk")
+            .gradleProperty("sdk.compile")
             .get()
             .toInt()
 
@@ -34,12 +53,12 @@ android {
         applicationId = "dev.yuyuyuyuyu.mycomposables"
         minSdk =
             providers
-                .gradleProperty("minSdk")
+                .gradleProperty("sdk.min")
                 .get()
                 .toInt()
         targetSdk =
             providers
-                .gradleProperty("targetSdk")
+                .gradleProperty("sdk.target")
                 .get()
                 .toInt()
         versionCode = 1

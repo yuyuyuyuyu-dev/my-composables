@@ -7,6 +7,26 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.aboutLibraries)
+
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
+}
+
+detekt {
+    source.setFrom("src")
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+ktlint {
+    version = libs.versions.ktlintCli.get()
+    filter {
+        val buildPath =
+            layout.buildDirectory
+                .get()
+                .asFile.path + File.separator
+        exclude { it.file.path.startsWith(buildPath) }
+    }
 }
 
 kotlin {
@@ -37,12 +57,12 @@ kotlin {
         namespace = "dev.yuyuyuyuyu.mycomposables.shared"
         compileSdk =
             providers
-                .gradleProperty("compileSdk")
+                .gradleProperty("sdk.compile")
                 .get()
                 .toInt()
         minSdk =
             providers
-                .gradleProperty("minSdk")
+                .gradleProperty("sdk.min")
                 .get()
                 .toInt()
 

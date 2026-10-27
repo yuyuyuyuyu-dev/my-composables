@@ -17,8 +17,13 @@ fun MyMaterialDynamicTheme(content: @Composable () -> Unit) {
                 if (isSystemInDarkTheme()) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             }
 
-            isSystemInDarkTheme() -> darkScheme
-            else -> lightScheme
+            isSystemInDarkTheme() -> {
+                darkScheme
+            }
+
+            else -> {
+                lightScheme
+            }
         }
 
     MyMaterialTheme(
