@@ -1,9 +1,9 @@
-package dev.yuyuyuyuyu.mycomposables
+package dev.yuyuyuyuyu.mycomposables.spec
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SharedCommonTest {
+class SharedLogicIOSSpec {
     @Test
     fun example() {
         assertEquals(3, 1 + 2)

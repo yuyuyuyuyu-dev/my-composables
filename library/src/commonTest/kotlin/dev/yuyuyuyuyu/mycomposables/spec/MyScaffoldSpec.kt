@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables
+package dev.yuyuyuyuyu.mycomposables.spec
 
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -9,13 +9,16 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
+import dev.yuyuyuyuyu.mycomposables.MyScaffold
+import dev.yuyuyuyuyu.mycomposables.MyScaffoldTestTags
+import dev.yuyuyuyuyu.mycomposables.SimpleTopAppBarTestTags
 import dev.yuyuyuyuyu.mycomposables.generated.resources.Res
 import dev.yuyuyuyuyu.mycomposables.generated.resources.open_source_licenses
 import org.jetbrains.compose.resources.getString
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class MyScaffoldTest {
+class MyScaffoldSpec {
     private val libraries =
         Libs(
             libraries =
