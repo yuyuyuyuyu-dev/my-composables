@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables.spec
+package dev.yuyuyuyuyu.mycomposables.specs
 
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -13,7 +13,7 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
-class SimpleTopAppBarSpec {
+class SimpleTopAppBarTest {
     @Test
     fun `should display the title it was given`() =
         runComposeUiTest {

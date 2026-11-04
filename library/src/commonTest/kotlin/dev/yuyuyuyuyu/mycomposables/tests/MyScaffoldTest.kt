@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables
+package dev.yuyuyuyuyu.mycomposables.tests
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -7,6 +7,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.mikepenz.aboutlibraries.Libs
+import dev.yuyuyuyuyu.mycomposables.MyScaffold
+import dev.yuyuyuyuyu.mycomposables.SimpleTopAppBarTestTags
 import kotlin.test.Test
 import kotlin.test.assertTrue
 

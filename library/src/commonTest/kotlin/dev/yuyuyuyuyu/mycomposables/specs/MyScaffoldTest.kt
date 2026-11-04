@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables.spec
+package dev.yuyuyuyuyu.mycomposables.specs
 
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -18,7 +18,7 @@ import org.jetbrains.compose.resources.getString
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class MyScaffoldSpec {
+class MyScaffoldTest {
     private val libraries =
         Libs(
             libraries =

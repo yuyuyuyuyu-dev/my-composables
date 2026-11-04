@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables.spec
+package dev.yuyuyuyuyu.mycomposables.specs
 
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -9,7 +9,7 @@ import dev.yuyuyuyuyu.mycomposables.MyMaterialTheme
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class MyMaterialThemeSpec {
+class MyMaterialThemeTest {
     @Test
     fun `should display the content it was given`() =
         runComposeUiTest {

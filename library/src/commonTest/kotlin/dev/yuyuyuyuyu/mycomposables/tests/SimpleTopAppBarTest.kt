@@ -1,9 +1,11 @@
-package dev.yuyuyuyuyu.mycomposables
+package dev.yuyuyuyuyu.mycomposables.tests
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import dev.yuyuyuyuyu.mycomposables.SimpleTopAppBar
+import dev.yuyuyuyuyu.mycomposables.SimpleTopAppBarTestTags
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
