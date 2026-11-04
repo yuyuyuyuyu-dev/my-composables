@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables
+package dev.yuyuyuyuyu.mycomposables.specs
 
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -7,6 +7,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import dev.yuyuyuyuyu.mycomposables.SimpleTopAppBar
+import dev.yuyuyuyuyu.mycomposables.SimpleTopAppBarTestTags
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
