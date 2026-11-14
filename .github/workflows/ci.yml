@@ -18,11 +18,11 @@ jobs:
         uses: actions/checkout@v7
       - name: Run actionlint
         uses: raven-actions/actionlint@v2
-  oxfmt:
-    name: Oxfmt
+  biome:
+    name: Biome
     permissions:
       contents: read
-    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/oxfmt.yml@main
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/biome.yml@main
   kotlin-lint:
     name: Kotlin lint
     permissions:
