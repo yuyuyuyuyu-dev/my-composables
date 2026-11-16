@@ -53,12 +53,15 @@ jobs:
       - name: Start sampling memory and CPU
         if: "!cancelled()"
         run: |
-          nohup bash -c 'while true; do
-            echo "T $(perl -MTime::HiRes=time -e "printf q(%d), time*1000") level=$(sysctl -n kern.memorystatus_level) load=$(sysctl -n vm.loadavg) swap=$(sysctl -n vm.swapusage)"
-            vm_stat | grep -E "Pages free|Pageins|Pageouts|Swapins|Swapouts|occupied by compressor"
-            ps -A -o pid=,%cpu=,rss=,comm= | sort -k2 -nr | head -n 6
-            sleep 1
-          done' > "$RUNNER_TEMP/sampler.log" 2>&1 &
+          (
+            set +e
+            while true; do
+              echo "T $(perl -MTime::HiRes=time -e 'printf q(%d), time*1000') level=$(sysctl -n kern.memorystatus_level) load=$(sysctl -n vm.loadavg) swap=$(sysctl -n vm.swapusage)"
+              vm_stat | grep -E "Pages free|Pageins|Pageouts|Swapins|Swapouts|occupied by compressor"
+              ps -A -o pid=,%cpu=,rss=,comm= | sort -k2 -nr | head -n 6
+              sleep 1
+            done
+          ) > "$RUNNER_TEMP/sampler.log" 2>&1 &
       - name: Run tests
         if: "!cancelled()"
         run: ./gradlew allTests
