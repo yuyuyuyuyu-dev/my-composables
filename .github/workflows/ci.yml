@@ -31,10 +31,35 @@ jobs:
     with:
       compose-multiplatform: true
   build:
-    name: Build
-    runs-on: macos-latest
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: metadata
+            os: ubuntu-latest
+            tasks: :library:allMetadataJar
+          - target: android
+            os: ubuntu-latest
+            tasks: :library:assembleAndroidMain :androidApp:assembleDebug
+          - target: jvm
+            os: ubuntu-latest
+            tasks: :library:jvmJar :desktopApp:assemble
+          - target: js
+            os: ubuntu-latest
+            tasks: :library:jsJar :library:jsBrowserDistribution :webApp:jsBrowserDevelopmentWebpack
+          - target: wasmJs
+            os: ubuntu-latest
+            tasks: :library:wasmJsJar :library:wasmJsBrowserDistribution :webApp:wasmJsBrowserDevelopmentWebpack
+          - target: iosArm64
+            os: macos-latest
+            tasks: :library:iosArm64MainKlibrary :library:iosArm64TestKlibrary :library:iosArm64MetadataElements :shared:linkDebugFrameworkIosArm64
+          - target: iosSimulatorArm64
+            os: macos-latest
+            tasks: :library:iosSimulatorArm64MainKlibrary :library:iosSimulatorArm64TestKlibrary :library:iosSimulatorArm64MetadataElements :shared:linkDebugFrameworkIosSimulatorArm64
     steps:
       - name: Check out code
         uses: actions/checkout@v7
@@ -49,8 +74,7 @@ jobs:
       # ones. Every target is still built, so a target that stops compiling is
       # still caught here rather than at release time.
       - name: Assemble
-        run: >-
-          ./gradlew :library:assemble :desktopApp:assemble :androidApp:assembleDebug :webApp:jsBrowserDevelopmentWebpack :webApp:wasmJsBrowserDevelopmentWebpack :shared:linkDebugFrameworkIosArm64 :shared:linkDebugFrameworkIosSimulatorArm64
+        run: ./gradlew ${{ matrix.tasks }}
   test:
     name: Test (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
