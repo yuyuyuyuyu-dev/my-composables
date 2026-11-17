@@ -1,7 +1,6 @@
 package dev.yuyuyuyuyu.mycomposables.specs
 
 import androidx.compose.material3.Text
-import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
@@ -17,7 +16,6 @@ import dev.yuyuyuyuyu.mycomposables.generated.resources.Res
 import dev.yuyuyuyuyu.mycomposables.generated.resources.open_source_licenses
 import org.jetbrains.compose.resources.getString
 import kotlin.test.Test
-import kotlin.time.TimeSource
 
 @OptIn(ExperimentalTestApi::class)
 class MyScaffoldTest {
@@ -42,98 +40,56 @@ class MyScaffoldTest {
     @Test
     fun `should navigate to the open source licenses screen`() =
         runComposeUiTest {
-            val testStart = TimeSource.Monotonic.markNow()
             // Arrange
-            step("T1", "00 setContent") {
-                setContent {
-                    MyScaffold(title = "title", libraries = libraries) {}
-                }
+            setContent {
+                MyScaffold(title = "title", libraries = libraries) {}
             }
 
             // Act
-            step("T1", "01 performClick MENU_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            }
-            step("T1", "02 performClick OPEN_SOURCE_LICENSES_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-            }
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
 
             // Assert
-            step("T1", "03 assertIsDisplayed OPEN_SOURCE_LICENSES_SCREEN") {
-                onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertIsDisplayed()
-            }
-            println("STEP|T1|total-in-block|${testStart.elapsedNow().inWholeMilliseconds}ms")
+            onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertIsDisplayed()
         }
 
     @Test
     fun `should do nothing when the open source licenses button is clicked on the open source licenses screen`() =
         runComposeUiTest {
-            val testStart = TimeSource.Monotonic.markNow()
             // Arrange
-            step("T2", "00 setContent") {
-                setContent {
-                    MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
-                }
+            setContent {
+                MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
             }
-            step("T2", "01 performClick MENU_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            }
-            step("T2", "02 performClick OPEN_SOURCE_LICENSES_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-            }
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
 
             // Act
-            step("T2", "03 performClick MENU_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            }
-            step("T2", "04 performClick OPEN_SOURCE_LICENSES_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-            }
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
 
             // Assert
             // A single step back reaching the main screen is what shows the
             // click left the back stack alone.
-            step("T2", "05 assertIsDisplayed OPEN_SOURCE_LICENSES_SCREEN") {
-                onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertIsDisplayed()
-            }
-            step(
-                "T2",
-                "06 performClick NAVIGATE_BACK_BUTTON",
-            ) { onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick() }
-            step("T2", "07 assertIsDisplayed main screen") {
-                onNodeWithText("main screen").assertIsDisplayed()
-            }
-            println("STEP|T2|total-in-block|${testStart.elapsedNow().inWholeMilliseconds}ms")
+            onNodeWithTag(MyScaffoldTestTags.OPEN_SOURCE_LICENSES_SCREEN).assertIsDisplayed()
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick()
+            onNodeWithText("main screen").assertIsDisplayed()
         }
 
     @Test
     fun `should navigate back to the main screen from the open source licenses screen`() =
         runComposeUiTest {
-            val testStart = TimeSource.Monotonic.markNow()
             // Arrange
-            step("T3", "00 setContent") {
-                setContent {
-                    MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
-                }
+            setContent {
+                MyScaffold(title = "title", libraries = libraries) { Text("main screen") }
             }
-            step("T3", "01 performClick MENU_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
-            }
-            step("T3", "02 performClick OPEN_SOURCE_LICENSES_BUTTON") {
-                onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
-            }
+            onNodeWithTag(SimpleTopAppBarTestTags.MENU_BUTTON).performClick()
+            onNodeWithTag(SimpleTopAppBarTestTags.OPEN_SOURCE_LICENSES_BUTTON).performClick()
 
             // Act
-            step(
-                "T3",
-                "03 performClick NAVIGATE_BACK_BUTTON",
-            ) { onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick() }
+            onNodeWithTag(SimpleTopAppBarTestTags.NAVIGATE_BACK_BUTTON).performClick()
 
             // Assert
-            step("T3", "04 assertIsDisplayed main screen") {
-                onNodeWithText("main screen").assertIsDisplayed()
-            }
-            println("STEP|T3|total-in-block|${testStart.elapsedNow().inWholeMilliseconds}ms")
+            onNodeWithText("main screen").assertIsDisplayed()
         }
 
     @Test
@@ -190,19 +146,4 @@ class MyScaffoldTest {
             // Assert
             onNodeWithText(openSourceLicensesTitle).assertIsDisplayed()
         }
-}
-
-@OptIn(ExperimentalTestApi::class)
-private fun ComposeUiTest.step(
-    test: String,
-    name: String,
-    block: ComposeUiTest.() -> Unit,
-) {
-    val virtualStart = mainClock.currentTime
-    val mark = TimeSource.Monotonic.markNow()
-    block()
-    waitForIdle()
-    val elapsed = mark.elapsedNow().inWholeMilliseconds
-    val virtual = mainClock.currentTime - virtualStart
-    println("STEP|$test|$name|${elapsed}ms|virtual=${virtual}ms")
 }
