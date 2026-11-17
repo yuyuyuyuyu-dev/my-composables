@@ -11,7 +11,7 @@ permissions:
   contents: read
 jobs:
   publish:
-    name: Release build and publish
+    name: Publish
     # macOS is required to build the Apple targets.
     runs-on: macos-latest
     steps:
