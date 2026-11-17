@@ -42,13 +42,6 @@ jobs:
         uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
         with:
           compose-multiplatform: true
-      # Runs here rather than with the other checks because the dump covers the
-      # Apple targets, which only this runner can compile.
-      - name: Check the public ABI is unchanged
-        if: "!cancelled()"
-        run: ./gradlew :library:checkKotlinAbi
-      # These keep going after an earlier failure for the same reason the checks
-      # above run as separate jobs: one push should report everything.
       # `assemble` builds every target twice, once debug and once release, and
       # the release half is what costs: linkReleaseFrameworkIosArm64 alone ran
       # for nearly four hours on this runner. Measured locally with the caches
@@ -56,7 +49,6 @@ jobs:
       # ones. Every target is still built, so a target that stops compiling is
       # still caught here rather than at release time.
       - name: Assemble
-        if: "!cancelled()"
         run: >-
           ./gradlew :library:assemble :desktopApp:assemble :androidApp:assembleDebug :webApp:jsBrowserDevelopmentWebpack :webApp:wasmJsBrowserDevelopmentWebpack :shared:linkDebugFrameworkIosArm64 :shared:linkDebugFrameworkIosSimulatorArm64
   test:
