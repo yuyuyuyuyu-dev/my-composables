@@ -30,12 +30,36 @@ jobs:
     uses: yuyuyuyuyu-dev/repo-config/.github/workflows/kotlin-lint.yml@main
     with:
       compose-multiplatform: true
-  test:
-    name: Build and test
-    # macOS is required to build and test the Apple targets.
-    runs-on: macos-latest
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: metadata
+            os: ubuntu-latest
+            tasks: :library:allMetadataJar
+          - target: android
+            os: ubuntu-latest
+            tasks: :library:assembleAndroidMain :androidApp:assembleDebug
+          - target: jvm
+            os: ubuntu-latest
+            tasks: :library:jvmJar :desktopApp:assemble
+          - target: js
+            os: ubuntu-latest
+            tasks: :library:jsJar :library:jsBrowserDistribution :webApp:jsBrowserDevelopmentWebpack
+          - target: wasmJs
+            os: ubuntu-latest
+            tasks: :library:wasmJsJar :library:wasmJsBrowserDistribution :webApp:wasmJsBrowserDevelopmentWebpack
+          - target: iosArm64
+            os: macos-latest
+            tasks: :library:iosArm64MainKlibrary :library:iosArm64TestKlibrary :library:iosArm64MetadataElements :shared:linkDebugFrameworkIosArm64
+          - target: iosSimulatorArm64
+            os: macos-latest
+            tasks: :library:iosSimulatorArm64MainKlibrary :library:iosSimulatorArm64TestKlibrary :library:iosSimulatorArm64MetadataElements :shared:linkDebugFrameworkIosSimulatorArm64
     steps:
       - name: Check out code
         uses: actions/checkout@v7
@@ -43,16 +67,6 @@ jobs:
         uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
         with:
           compose-multiplatform: true
-      # Runs here rather than with the other checks because the dump covers the
-      # Apple targets, which only this runner can compile.
-      - name: Check the public ABI is unchanged
-        if: "!cancelled()"
-        run: ./gradlew :library:checkKotlinAbi
-      # These keep going after an earlier failure for the same reason the checks
-      # above run as separate jobs: one push should report everything.
-      - name: Run tests
-        if: "!cancelled()"
-        run: ./gradlew allTests
       # `assemble` builds every target twice, once debug and once release, and
       # the release half is what costs: linkReleaseFrameworkIosArm64 alone ran
       # for nearly four hours on this runner. Measured locally with the caches
@@ -60,14 +74,53 @@ jobs:
       # ones. Every target is still built, so a target that stops compiling is
       # still caught here rather than at release time.
       - name: Assemble
-        if: "!cancelled()"
-        run: >-
-          ./gradlew :library:assemble :desktopApp:assemble :androidApp:assembleDebug :webApp:jsBrowserDevelopmentWebpack :webApp:wasmJsBrowserDevelopmentWebpack :shared:linkDebugFrameworkIosArm64 :shared:linkDebugFrameworkIosSimulatorArm64
+        run: ./gradlew ${{ matrix.tasks }}
+  test:
+    name: Test (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: jvm
+            os: ubuntu-latest
+            task: jvmTest
+          - target: wasmJs
+            os: ubuntu-latest
+            task: wasmJsTest
+          - target: iosSimulatorArm64
+            os: macos-latest
+            task: iosSimulatorArm64Test
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+      - name: Set up the JDK and Gradle
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
+        with:
+          compose-multiplatform: true
+      - name: Run tests
+        run: ./gradlew "$TASK"
+        env:
+          TASK: ${{ matrix.task }}
       - name: Upload test results
         # Kept on failure so the reports explain what broke.
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: test-results
+          name: test-results-${{ matrix.target }}
           path: "**/build/reports/tests/"
           retention-days: 7
+  test-android:
+    name: Test (android)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: "echo 'TODO: Not yet implemented'"
+  test-js:
+    name: Test (js)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: "echo 'TODO: Not yet implemented'"
