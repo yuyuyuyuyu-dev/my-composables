@@ -112,3 +112,17 @@ jobs:
           name: test-results-${{ matrix.target }}
           path: "**/build/reports/tests/"
           retention-days: 7
+  # TODO: Not yet implemented
+  test-android:
+    name: Test (android)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: echo "Not yet implemented"
+  # TODO: Not yet implemented
+  test-js:
+    name: Test (js)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: echo "Not yet implemented"
