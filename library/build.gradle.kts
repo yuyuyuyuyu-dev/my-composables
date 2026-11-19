@@ -91,7 +91,6 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.aboutLibraries.composeM3)
             implementation(libs.createTypography)
-            implementation(libs.navigation3.runtime)
             implementation(libs.navigation3.ui)
         }
         commonTest.dependencies {
