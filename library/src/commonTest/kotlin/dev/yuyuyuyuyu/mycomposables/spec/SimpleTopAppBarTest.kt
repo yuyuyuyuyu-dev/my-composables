@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables.specs
+package dev.yuyuyuyuyu.mycomposables.spec
 
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
