@@ -1,4 +1,4 @@
-package dev.yuyuyuyuyu.mycomposables.tests
+package dev.yuyuyuyuyu.mycomposables.nonspec
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
