@@ -10,7 +10,6 @@ androidx-testExt = "1.3.0"
 composeMultiplatform = "1.12.2"
 createTypography = "0.2.1"
 detekt = "1.23.8"
-googleFonts = "0.4.0"
 junit = "4.13.2"
 kotlin = "2.4.21"
 kotlin-wrappers = "2026.11.4"
@@ -57,7 +56,6 @@ androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library",
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-googleFonts = { id = "com.composables.google-fonts", version.ref = "googleFonts" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

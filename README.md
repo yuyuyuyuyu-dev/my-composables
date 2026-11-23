@@ -57,12 +57,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
-### Yomogi font
-
-`MyMaterialTheme` bundles the [Yomogi](https://fonts.google.com/specimen/Yomogi) font, which is not covered by the Apache License above.
-It is licensed under the [SIL Open Font License, Version 1.1](https://openfontlicense.org), and its license text is packaged with the font at `files/googleFonts/licenses/Yomogi.txt` in the library's Compose resources.
-
-```
-Copyright 2020 The Yomogi Project Authors (https://github.com/satsuyako/YomogiFont)
-```

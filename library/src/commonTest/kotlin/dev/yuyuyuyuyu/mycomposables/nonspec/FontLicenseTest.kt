@@ -12,7 +12,7 @@ class FontLicenseTest {
     fun `should ship the Yomogi copyright notice and the SIL Open Font License with the font`() =
         runComposeUiTest {
             // Act
-            val license = Res.readBytes("files/googleFonts/licenses/Yomogi.txt").decodeToString()
+            val license = Res.readBytes("files/licenses/Yomogi/OFL.txt").decodeToString()
 
             // Assert
             assertTrue(license.contains("Copyright 2020 The Yomogi Project Authors"))

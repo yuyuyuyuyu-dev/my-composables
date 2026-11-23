@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.vanniktech.mavenPublish)
-    alias(libs.plugins.googleFonts)
 
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
@@ -109,11 +108,6 @@ compose.resources {
     packageOfResClass = "dev.yuyuyuyuyu.mycomposables.generated.resources"
 }
 
-googleFonts {
-    packageName.set("dev.yuyuyuyuyu.mycomposables.fonts")
-    family("Yomogi")
-}
-
 // Compose renders through Skia, and its binding is not loaded into the test page
 // on the legacy JS target, so every UI test there dies on the first frame with
 // `org_jetbrains_skia_Surface__1nMakeRasterN32Premul is not defined`. The same
@@ -138,12 +132,6 @@ mavenPublishing {
                 name = "The Apache License, Version 2.0"
                 url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
                 distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-            }
-            license {
-                name = "SIL Open Font License, Version 1.1"
-                url = "https://openfontlicense.org"
-                distribution = "repo"
-                comments = "Applies to the bundled Yomogi font only."
             }
         }
         developers {
