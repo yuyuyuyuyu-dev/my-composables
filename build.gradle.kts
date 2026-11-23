@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.vanniktech.mavenPublish) apply false
     alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.googleFonts) apply false
     alias(libs.plugins.ktlint)
     alias(libs.plugins.versionCatalogUpdate)
 }

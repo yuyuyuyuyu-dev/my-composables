@@ -1,0 +1,7 @@
+# Google Fonts lockfile. Commit this file. Delete an entry to resolve it again.
+Yomogi.license.family=Yomogi
+Yomogi.license.sha256=bc0330d5973ab1f200553f51b4cb4ef11b81187fdcd0249f7f83992726c02a48
+Yomogi.license.url=https://raw.githubusercontent.com/google/fonts/main/ofl/yomogi/OFL.txt
+googlefonts_yomogi_400_normal.family=Yomogi
+googlefonts_yomogi_400_normal.sha256=f50dc601d1c49474ab47bc29fbb0ad4343d6b1c792782f6c0bff058e754ddf9e
+googlefonts_yomogi_400_normal.url=https://fonts.gstatic.com/s/yomogi/v27/VuJwdNrS2ZL7rpoPWA.ttf
